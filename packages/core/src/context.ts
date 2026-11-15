@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { users, type Database, type Role } from "@gatekeeper/database";
 import type { Channel, Tracer } from "@gatekeeper/observability";
+import type { AuthorizationDecision } from "./authorization/policy";
 
 /** An authenticated principal, always loaded from the database — never from model or client input. */
 export interface Actor {
@@ -23,6 +24,8 @@ export interface ExecutionContext {
   sessionId?: string | null;
   channel: Channel;
   tracer?: Tracer;
+  /** Observes every policy decision made while serving this request (used for result metadata). */
+  onDecision?: (decision: AuthorizationDecision) => void;
 }
 
 export function loadActor(db: Database, userId: string | null | undefined): Actor | null {

@@ -35,6 +35,7 @@ export function enforce(ctx: ExecutionContext, input: EnforceInput): Authorizati
     resource: input.resource,
     context: input.context,
   });
+  ctx.onDecision?.(decision);
   const target = auditTarget(input.resource);
   const resourceType = input.audit?.resourceType ?? target.type;
   const resourceId = input.audit?.resourceId ?? target.id;

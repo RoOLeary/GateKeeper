@@ -163,6 +163,20 @@ export function listApprovals(
   });
 }
 
+/** Number of pending approvals the actor could approve right now. Policy-filtered; returns no record data, so not audited. */
+export function countActionableApprovals(db: Database, actor: Actor | null): number {
+  if (!actor) return 0;
+  return db
+    .select({ id: approvalRequests.id })
+    .from(approvalRequests)
+    .where(eq(approvalRequests.status, "pending"))
+    .all()
+    .filter(({ id }) => {
+      const found = loadApproval(db, id);
+      return found ? preview(db, actor, found).canApprove : false;
+    }).length;
+}
+
 export interface ApprovalDecisionResult {
   status: "approved" | "rejected" | "invalidated";
   approvalId: string;

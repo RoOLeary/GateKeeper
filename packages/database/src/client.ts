@@ -13,7 +13,7 @@ export type DbExecutor = BaseSQLiteDatabase<"sync", BetterSqlite3.RunResult, typ
 
 /** Walks up from `start` until it finds the pnpm workspace root. */
 export function findWorkspaceRoot(start = process.cwd()): string {
-  let dir = path.resolve(start);
+  let dir = path.resolve(/*turbopackIgnore: true*/ start);
   while (true) {
     if (existsSync(path.join(dir, "pnpm-workspace.yaml"))) return dir;
     const parent = path.dirname(dir);

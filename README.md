@@ -32,7 +32,7 @@ packages/agent         Tool-calling loop, OpenAI Responses adapter, offline rule
 packages/database      Drizzle schema, migrations, deterministic seed data (SQLite)
 packages/observability Structured logging with redaction, audit events, request tracing
 tests/                 Unit, integration (incl. real stdio subprocess) and agent evals
-docs/                  architecture.md · security.md · decisions.md
+docs/                  explainer.md · architecture.md · security.md · decisions.md
 ```
 
 **Stack:** TypeScript 6 (strict) · pnpm workspaces · Next.js 16 · React 19 · Tailwind CSS 4 · Zod 4 · SQLite (better-sqlite3) + Drizzle ORM · `@modelcontextprotocol/sdk` · OpenAI Responses API · Vitest.
@@ -179,4 +179,4 @@ The model's output is treated like a form submission from the open internet: use
 - **The offline model is a stand-in.** It demonstrates the plumbing and the security paths, not language understanding. One eval case (refusing a non-allowlisted field change) is only meaningful with an LLM and is skipped offline.
 - **The reply guard is a heuristic.** It catches common false refund-success phrasing. The authoritative record is the database and the tool-call cards in the UI, not the assistant's prose.
 
-More detail: [docs/architecture.md](docs/architecture.md) · [docs/security.md](docs/security.md) · [docs/decisions.md](docs/decisions.md).
+New to the project? Start with [docs/explainer.md](docs/explainer.md). More detail: [docs/architecture.md](docs/architecture.md) · [docs/security.md](docs/security.md) · [docs/decisions.md](docs/decisions.md).

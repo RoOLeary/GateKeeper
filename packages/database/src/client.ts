@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import BetterSqlite3 from "better-sqlite3";
 import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
@@ -11,13 +12,26 @@ export type Database = BetterSQLite3Database<typeof schema> & { $client: BetterS
 /** Either the root database handle or an open transaction. */
 export type DbExecutor = BaseSQLiteDatabase<"sync", BetterSqlite3.RunResult, typeof schema>;
 
-/** Walks up from `start` until it finds the pnpm workspace root. */
-export function findWorkspaceRoot(start = process.cwd()): string {
+/**
+ * Walks up until it finds the pnpm workspace root. Starts from the working directory and
+ * falls back to this module's location, because MCP clients may launch the stdio server
+ * from an unrelated directory.
+ */
+export function findWorkspaceRoot(start?: string): string {
+  const candidates = start ? [start] : [process.cwd(), path.dirname(fileURLToPath(import.meta.url))];
+  for (const candidate of candidates) {
+    const root = walkUpToWorkspace(candidate);
+    if (root) return root;
+  }
+  throw new Error(`Could not locate workspace root from ${candidates.join(" or ")}`);
+}
+
+function walkUpToWorkspace(start: string): string | null {
   let dir = path.resolve(/*turbopackIgnore: true*/ start);
   while (true) {
     if (existsSync(path.join(dir, "pnpm-workspace.yaml"))) return dir;
     const parent = path.dirname(dir);
-    if (parent === dir) throw new Error(`Could not locate workspace root from ${start}`);
+    if (parent === dir) return null;
     dir = parent;
   }
 }

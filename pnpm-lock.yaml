@@ -32,6 +32,9 @@ importers:
       drizzle-orm:
         specifier: ^0.45.4
         version: 0.45.4(@types/better-sqlite3@9.6.0)(better-sqlite3@13.2.0)
+      openai:
+        specifier: ^7.57.0
+        version: 7.57.0(zod@4.6.7)
       tsx:
         specifier: ^4.23.15
         version: 4.23.15

@@ -1,0 +1,21 @@
+{
+  "name": "@gatekeeper/agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "cli": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@gatekeeper/core": "workspace:*",
+    "@gatekeeper/database": "workspace:*",
+    "@gatekeeper/mcp-server": "workspace:*",
+    "@gatekeeper/observability": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "openai": "^7.57.0",
+    "zod": "^4.6.7"
+  }
+}

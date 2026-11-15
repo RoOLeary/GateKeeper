@@ -1,0 +1,38 @@
+{
+  "name": "gatekeeper",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.7",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm db:setup && pnpm --filter @gatekeeper/web dev",
+    "build": "pnpm --filter @gatekeeper/web build",
+    "start": "pnpm --filter @gatekeeper/web start",
+    "db:generate": "pnpm --filter @gatekeeper/database run generate",
+    "db:setup": "pnpm --filter @gatekeeper/database run setup",
+    "db:reset": "pnpm --filter @gatekeeper/database run reset",
+    "mcp:stdio": "pnpm --silent --filter @gatekeeper/mcp-server run stdio",
+    "agent:cli": "pnpm --silent --filter @gatekeeper/agent run cli",
+    "typecheck": "tsc -p tsconfig.json && pnpm --filter @gatekeeper/web typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "eval": "vitest run tests/evals",
+    "eval:live": "GATEKEEPER_LIVE_EVAL=1 vitest run tests/evals"
+  },
+  "devDependencies": {
+    "@gatekeeper/agent": "workspace:*",
+    "@gatekeeper/core": "workspace:*",
+    "@gatekeeper/database": "workspace:*",
+    "@gatekeeper/mcp-server": "workspace:*",
+    "@gatekeeper/observability": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "drizzle-orm": "^0.45.4",
+    "zod": "^4.6.7",
+    "@types/node": "^24.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
+  }
+}

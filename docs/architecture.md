@@ -2,17 +2,17 @@
 
 This document follows a **SCOPE** structure:
 
-- **S**ystem context: what Gatekeeper is and where its boundaries are.
-- **C**omponents: the packages and what each owns.
-- **O**perations: how requests flow end-to-end.
-- **P**rotections: where each security property is enforced.
-- **E**volution: what would change on the way to production.
+- **S**ituation: what Gatekeeper is, who calls it, and where the trust boundaries are.
+- **C**apabilities: the packages, what each can do, and the data they own.
+- **O**rchestration: how requests flow end-to-end across agent, MCP server, and services.
+- **P**ermissions: where each authorization and security property is enforced.
+- **E**valuation: where the demo falls short, and what would change on the way to production.
 
 > Gatekeeper is a demonstration project. The architecture is designed to be production-*shaped*, but the deployment (SQLite, a dev identity switcher, stdio only) is not production-ready.
 
 ---
 
-## S: System context
+## S: Situation
 
 Gatekeeper lets support staff work with customer data through an AI assistant, without trusting that assistant. There are three kinds of caller and one source of truth:
 
@@ -53,7 +53,7 @@ flowchart LR
 
 The AI provider (OpenAI) is called only from the server. The API key never reaches the browser, and requests use `store: false`.
 
-## C: Components
+## C: Capabilities
 
 ```mermaid
 flowchart TB
@@ -102,7 +102,7 @@ The packages export TypeScript source. Next.js transpiles them (`transpilePackag
 
 Money is stored as integer cents everywhere. Timelines are ordered by SQLite `rowid` (insertion order) rather than timestamps, which can collide within a millisecond.
 
-## O: Operations
+## O: Orchestration
 
 ### An agent request
 
@@ -157,7 +157,7 @@ Pages and server actions use the same `ExecutionContext` and services as the MCP
 
 `packages/mcp-server/src/transport/stdio.ts` loads `GATEKEEPER_DEMO_PRINCIPAL`, refuses to start if it is missing or unknown, and serves one principal for the process lifetime with `channel: "mcp-stdio"`. Stdout carries only JSON-RPC; logs go to stderr.
 
-## P: Protections
+## P: Permissions
 
 | Property | Mechanism | Location |
 | --- | --- | --- |
@@ -177,7 +177,7 @@ Pages and server actions use the same `ExecutionContext` and services as the MCP
 
 Audit events and traces are stored and shown separately on purpose. **Audit** answers *who was allowed or denied what*. Every authorization decision is recorded before the action runs, and the `refund.execute` event is written inside the same transaction as the refund itself. It is the record you'd hand to a security reviewer. **Traces** answer *how did this request execute*: timings, model calls, tool selection. They are best-effort diagnostics.
 
-## E: Evolution
+## E: Evaluation
 
 What would change to take this toward production:
 
